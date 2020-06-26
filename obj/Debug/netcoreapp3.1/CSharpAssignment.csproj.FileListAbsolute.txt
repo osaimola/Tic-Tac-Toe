@@ -1,0 +1,13 @@
+C:\Users\Osa\Documents\code\TECHCareers\CSharpAssignment\bin\Debug\netcoreapp3.1\CSharpAssignment.exe
+C:\Users\Osa\Documents\code\TECHCareers\CSharpAssignment\bin\Debug\netcoreapp3.1\CSharpAssignment.deps.json
+C:\Users\Osa\Documents\code\TECHCareers\CSharpAssignment\bin\Debug\netcoreapp3.1\CSharpAssignment.runtimeconfig.json
+C:\Users\Osa\Documents\code\TECHCareers\CSharpAssignment\bin\Debug\netcoreapp3.1\CSharpAssignment.runtimeconfig.dev.json
+C:\Users\Osa\Documents\code\TECHCareers\CSharpAssignment\bin\Debug\netcoreapp3.1\CSharpAssignment.dll
+C:\Users\Osa\Documents\code\TECHCareers\CSharpAssignment\bin\Debug\netcoreapp3.1\CSharpAssignment.pdb
+C:\Users\Osa\Documents\code\TECHCareers\CSharpAssignment\obj\Debug\netcoreapp3.1\CSharpAssignment.csprojAssemblyReference.cache
+C:\Users\Osa\Documents\code\TECHCareers\CSharpAssignment\obj\Debug\netcoreapp3.1\CSharpAssignment.AssemblyInfoInputs.cache
+C:\Users\Osa\Documents\code\TECHCareers\CSharpAssignment\obj\Debug\netcoreapp3.1\CSharpAssignment.AssemblyInfo.cs
+C:\Users\Osa\Documents\code\TECHCareers\CSharpAssignment\obj\Debug\netcoreapp3.1\CSharpAssignment.csproj.CoreCompileInputs.cache
+C:\Users\Osa\Documents\code\TECHCareers\CSharpAssignment\obj\Debug\netcoreapp3.1\CSharpAssignment.dll
+C:\Users\Osa\Documents\code\TECHCareers\CSharpAssignment\obj\Debug\netcoreapp3.1\CSharpAssignment.pdb
+C:\Users\Osa\Documents\code\TECHCareers\CSharpAssignment\obj\Debug\netcoreapp3.1\CSharpAssignment.genruntimeconfig.cache
