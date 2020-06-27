@@ -6,6 +6,10 @@ namespace CSharpAssignment
     {
         static string currentPlayer = "X";
         static string tilePosition = "";
+        static int playCount = 0;
+
+        // TODO: update this to onlu declare gameWinner & initialize it in isGameended checks.
+        static string gameWinner = "Draw";
         static string[,] gameState = { { " ", " ", " " }, { " ", " ", " " }, { " ", " ", " " } };
         static string[,] validPositions = { { "1", "2", "3" }, { "4", "5", "6" }, { "7", "8", "9" } };
         static void Main(string[] args)
@@ -20,7 +24,7 @@ namespace CSharpAssignment
 
         static void PlayGame()
         //begin a new game
-        // consider taking a user input to determine if single player vs AI or multiplayer
+        // TODO: consider taking a user input to determine if single player vs AI or multiplayer
         {
 
             Console.Clear(); // only clears the visible portion of the console...https://docs.microsoft.com/en-us/dotnet/api/system.console.clear?view=netcore-3.1
@@ -38,16 +42,14 @@ namespace CSharpAssignment
 
             Console.WriteLine($"Player {currentPlayer}, please enter a square number to place your token in...");
 
-            //TODO: if user input between 1-9 and tile is empty, then update the tile. else ask for input again
+            // if user input between 1-9 and tile is empty, then update the tile. else ask for input again
             tilePosition = Console.ReadLine();
             while (!Program.IsValidChoice(tilePosition) || !Program.IsValidTile(tilePosition))
             {
                 Console.WriteLine("Please enter a valid square number");
                 tilePosition = Console.ReadLine();
             }
-
             Program.UpdateTile(tilePosition);
-            PrintGameBoard(gameState);
 
         }
 
@@ -115,6 +117,8 @@ namespace CSharpAssignment
             // switch between players for each turn
             if (currentPlayer == "X") { currentPlayer = "O"; }
             else if (currentPlayer == "O") { currentPlayer = "X"; }
+
+            playCount++;
         }
 
 
@@ -163,10 +167,54 @@ namespace CSharpAssignment
 
         }
 
+        static bool IsGameEnded(string[,] currentState)
+        // checks if game is ended (optionally updates winner)
+        {
+            // diagonal wins
+            if ((currentState[0, 0] != " " && currentState[0, 0] == currentState[1, 1] && currentState[1, 1] == currentState[2, 2])
+                 ||
+                 (currentState[0, 2] != " " && currentState[0, 2] == currentState[1, 1] && currentState[1, 1] == currentState[2, 0]))
+            {
+                gameWinner = currentState[1, 1];
+                // set current winner to the position 5 tile as that tile will have winner regardless of which direction diagonal is in.
+                return true;
+            }
+
+            // loop through to check for wins in columns and rows
+            for (int i = 0; i < 3; i++)
+            {
+                // horizontal wins
+                if ((currentState[i, 0] != " ") && (currentState[i, 0] == currentState[i, 1]) && (currentState[i, 1] == currentState[i, 2]))
+                {
+                    gameWinner = currentState[i, 0];
+                    return true;
+                }
+
+                // vertical wins
+                else if ((currentState[0, i] != " ") && (currentState[0, i] == currentState[1, i]) && (currentState[1, i] == currentState[2, i]))
+                {
+                    gameWinner = currentState[0, i];
+                    return true;
+                }
+            }
+
+            // if no wins detected and game board is full 
+            if (playCount > 9)
+            {
+                gameWinner = "Draw";
+                return true;
+            }
+
+            // returns false if no wins or end conditions detected
+            return false;
+        }
+
         static void ResetGame()
         // Return game to it's initial state
         {
             Console.WriteLine("Resetting game...");
+            playCount = 0;
+
             currentPlayer = " ";
 
             for (int i = 1; i < 10; i++)
