@@ -5,11 +5,16 @@ namespace CSharpAssignment
     class Program
     {
         static string currentPlayer = "X";
+        static string tilePosition = "";
         static string[,] gameState = { { " ", " ", " " }, { " ", " ", " " }, { " ", " ", " " } };
         static string[,] validPositions = { { "1", "2", "3" }, { "4", "5", "6" }, { "7", "8", "9" } };
         static void Main(string[] args)
         {
+            //string continueGame;
+            //while ((continueGame = (Console.ReadLine()).ToUpper()) != "N")
+            //{
             Program.PlayGame();
+            //}
 
         }
 
@@ -20,7 +25,7 @@ namespace CSharpAssignment
 
             Console.Clear(); // only clears the visible portion of the console...https://docs.microsoft.com/en-us/dotnet/api/system.console.clear?view=netcore-3.1
 
-            //TODO: CHECK IF SOMEONE WON, IF NOT PROCEED WITH BELOW
+            //TODO: CHECK IF SOMEONE WON OR THE BOARD IS FULL, IF NOT PROCEED WITH BELOW
             // if (GameEnded(gameStatus)) { 
             // display winner.
             //Ask to replay.
@@ -30,6 +35,19 @@ namespace CSharpAssignment
             Program.PrintGameBoard(validPositions);
             Console.WriteLine("Game board status:");
             Program.PrintGameBoard(gameState);
+
+            Console.WriteLine($"Player {currentPlayer}, please enter a square number to place your token in...");
+
+            //TODO: if user input between 1-9 and tile is empty, then update the tile. else ask for input again
+            tilePosition = Console.ReadLine();
+            while (!Program.IsValidChoice(tilePosition) || !Program.IsValidTile(tilePosition))
+            {
+                Console.WriteLine("Please enter a valid square number");
+                tilePosition = Console.ReadLine();
+            }
+
+            Program.UpdateTile(tilePosition);
+            PrintGameBoard(gameState);
 
         }
 
@@ -66,6 +84,32 @@ namespace CSharpAssignment
                 case "1":
                     gameState[0, 0] = currentPlayer;
                     break;
+                case "2":
+                    gameState[0, 1] = currentPlayer;
+                    break;
+                case "3":
+                    gameState[0, 2] = currentPlayer;
+                    break;
+                case "4":
+                    gameState[1, 0] = currentPlayer;
+                    break;
+                case "5":
+                    gameState[1, 1] = currentPlayer;
+                    break;
+                case "6":
+                    gameState[1, 2] = currentPlayer;
+                    break;
+                case "7":
+                    gameState[2, 0] = currentPlayer;
+                    break;
+                case "8":
+                    gameState[2, 1] = currentPlayer;
+                    break;
+                case "9":
+                    gameState[2, 2] = currentPlayer;
+                    break;
+                default:
+                    break;
             }
 
             // switch between players for each turn
@@ -73,10 +117,55 @@ namespace CSharpAssignment
             else if (currentPlayer == "O") { currentPlayer = "X"; }
         }
 
+
+        static bool IsValidTile(string tile)
+        // Check if the selected tile is allowed for play (only empty tiles are valid)
+        {
+            switch (tile)
+            {
+                case "1":
+                    return ((gameState[0, 0] == " ") ? true : false);
+                case "2":
+                    return ((gameState[0, 1] == " ") ? true : false);
+                case "3":
+                    return ((gameState[0, 2] == " ") ? true : false);
+                case "4":
+                    return ((gameState[1, 0] == " ") ? true : false);
+                case "5":
+                    return ((gameState[1, 1] == " ") ? true : false);
+                case "6":
+                    return ((gameState[1, 2] == " ") ? true : false);
+                case "7":
+                    return ((gameState[2, 0] == " ") ? true : false);
+                case "8":
+                    return ((gameState[2, 1] == " ") ? true : false);
+                case "9":
+                    return ((gameState[2, 2] == " ") ? true : false);
+                default:
+                    return false;
+            }
+        }
+
+        static bool IsValidChoice(string tile)
+        // checks if user has entered a valid square option
+        {
+            int intTile;
+            try
+            {
+                intTile = Int32.Parse(tile);
+
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return (0 < intTile && intTile < 10);
+
+        }
+
         static void ResetGame()
         // Return game to it's initial state
         {
-            // wtf???????
             Console.WriteLine("Resetting game...");
             currentPlayer = " ";
 
