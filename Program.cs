@@ -4,7 +4,7 @@ namespace CSharpAssignment
 {
     class Program
     {
-        static string currentPlayer = "O";
+        static string currentPlayer = "X";
         static string tilePosition = "";
         static int playCount;
 
@@ -16,7 +16,15 @@ namespace CSharpAssignment
             string letsPlay = "Y";
             while (letsPlay == "Y")
             {
-                Program.PlayGame();
+                // switch between HUMAN v HUMAN and HUMAN v MACHINE mode here.
+                Console.WriteLine("\n\nChose a Game Mode \n[1] Human vs Human \n[2] Human vs Computer");
+                string userChoice = Console.ReadLine();
+                while (userChoice != "1" && userChoice != "2")
+                {
+                    Console.WriteLine("Please Enter a Valid Choice [ 1 or 2 ]");
+                    userChoice = Console.ReadLine();
+                }
+                Program.PlayGame(userChoice);
 
                 Console.Clear();
                 Console.WriteLine("Game board status:");
@@ -35,7 +43,7 @@ namespace CSharpAssignment
 
         }
 
-        static void PlayGame()
+        static void PlayGame(string gameMode)
         //begin a new game
         // TODO: consider taking a user input to determine if single player vs AI or multiplayer
         {
@@ -55,28 +63,28 @@ namespace CSharpAssignment
                 Program.PrintGameBoard(gameState);
 
                 //EXPERIMENTAL CODE
-                if (currentPlayer == "X")
+                if (gameMode == "2" && currentPlayer == "O")
                 {
-                    (int a, int x, int y) = Program.AlphaBetaPlay(-1, -2, 2);
-                    Console.WriteLine($"the oracle says play position x: {x}, y: {y}");
-                }
-                if (currentPlayer == "O")
-                {
+                    // get best play and update tile
                     (int a, int x, int y) = Program.AlphaBetaPlay(1, -2, 2);
-                    Console.WriteLine($"the oracle says play position x: {x}, y: {y}");
+                    Program.UpdateTile(validPositions[x, y]);
+
                 }
                 //END EXPERIMENTAL CODE
-
-                Console.WriteLine($"Player {currentPlayer}, please enter a square number to place your token in...");
-
-                // if user input between 1-9 and tile is empty, then update the tile. else ask for input again
-                tilePosition = Console.ReadLine();
-                while (!Program.IsValidChoice(tilePosition) || !Program.IsValidTile(tilePosition))
+                // only run this for human turns
+                else
                 {
-                    Console.WriteLine("Unavailable or invalid square choice.\nPlease enter a valid square number [1 through 9]");
+                    Console.WriteLine($"Player {currentPlayer}, please enter a square number to place your token in...");
+
+                    // if user input between 1-9 and tile is empty, then update the tile. else ask for input again
                     tilePosition = Console.ReadLine();
+                    while (!Program.IsValidChoice(tilePosition) || !Program.IsValidTile(tilePosition))
+                    {
+                        Console.WriteLine("Unavailable or invalid square choice.\nPlease enter a valid square number [1 through 9]");
+                        tilePosition = Console.ReadLine();
+                    }
+                    Program.UpdateTile(tilePosition);
                 }
-                Program.UpdateTile(tilePosition);
             }
 
         }
@@ -276,21 +284,17 @@ namespace CSharpAssignment
         static (int, int, int) AlphaBetaPlay(int mx, int alpha, int beta)
         // this method takes the current game state and uses the Alpha Beta strategy (Watch this video https://youtu.be/STjW3eH0Cik?t=1503)
         // to determine the best course of action for AI
-        // returns a tile value to play
+        // returns a tuple (scenario outcone, row, column)
         {
-            // create a deep copy of the gameState
-            // NOTE that this will not work for arrays of Objects. See => https://stackoverflow.com/questions/15725840/copy-one-2d-array-to-another-2d-array
-            //string[,] virtualState = currentState.Clone() as string[,];
-
             /* mx is a multiplier. We will use it to control if our alpha-beta is optimizing for a max value
-            or optimizing for a minimum value (one player desires max while the other desires min)
-            That way we can set mx to -1 for player X and to 1 for player O, for example
-            --- Possible outcomes for a player desiring max:  1 => win, 0 => tie, -1 => loss ---
-            
-            we begin by setting optimalValue to worse than the worst case.
-            2 for a player that desires minimum
-            -2 for a player that desires maximum
-            */
+             or optimizing for a minimum value (one player desires max while the other desires min)
+             That way we can set mx to -1 for player X and to 1 for player O, for example
+             --- Possible outcomes for a player desiring max:  1 => win, 0 => tie, -1 => loss ---
+
+             we begin by setting optimalValue to worse than the worst case.
+             2 for a player that desires minimum
+             -2 for a player that desires maximum
+             */
             int optimalValue = (-2 * mx);
             int xPos = -1; // row position in our 2d array
             int yPos = -1; // column position in our 2d array
@@ -298,8 +302,7 @@ namespace CSharpAssignment
             int optimalI;
             int optimalJ;
 
-            // TODO: define return winner
-            string result = ""; // return x, o, or draw if end game conditions are met.
+            string result = "";
             if (Program.IsGameEnded(gameState)) { result = gameWinner; }
 
 
@@ -317,7 +320,7 @@ namespace CSharpAssignment
                     // if this tile is empty, it is valid. lets explore this option!
                     if (gameState[i, j] == " ")
                     {
-                        // we can tell whose turn it is based on if they are optimizing for a max or a min and play accordingly
+                        // we can tell whose turn it is based on if they are optimizing for a max or a min, and play accordingly
                         if (mx < 0) { gameState[i, j] = "X"; }
                         if (mx > 0) { gameState[i, j] = "O"; }
 
