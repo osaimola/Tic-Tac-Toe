@@ -6,7 +6,7 @@ namespace CSharpAssignment
     {
         static string currentPlayer = "X";
         static string tilePosition = "";
-        static int playCount = 0;
+        static int playCount;
 
         // TODO: update this to onlu declare gameWinner & initialize it in isGameended checks.
         static string gameWinner = "Draw";
@@ -14,11 +14,25 @@ namespace CSharpAssignment
         static string[,] validPositions = { { "1", "2", "3" }, { "4", "5", "6" }, { "7", "8", "9" } };
         static void Main(string[] args)
         {
-            //string continueGame;
-            //while ((continueGame = (Console.ReadLine()).ToUpper()) != "N")
-            //{
-            Program.PlayGame();
-            //}
+            string letsPlay = "Y";
+            while (letsPlay == "Y")
+            {
+                Program.PlayGame();
+
+                Console.Clear();
+                Console.WriteLine("Game board status:");
+                Program.PrintGameBoard(gameState);
+                Console.WriteLine($"!!!Game over!!!\nResult: {gameWinner}");
+
+                // Reset game and ask play if they want to play again
+                Program.ResetGame();
+                letsPlay = "";
+                while (letsPlay != "Y" && letsPlay != "N")
+                {
+                    Console.WriteLine("Would you like to play again? [Enter Y or N]");
+                    letsPlay = Console.ReadLine().ToUpper();
+                }
+            }
 
         }
 
@@ -27,29 +41,31 @@ namespace CSharpAssignment
         // TODO: consider taking a user input to determine if single player vs AI or multiplayer
         {
 
-            Console.Clear(); // only clears the visible portion of the console...https://docs.microsoft.com/en-us/dotnet/api/system.console.clear?view=netcore-3.1
-
-            //TODO: CHECK IF SOMEONE WON OR THE BOARD IS FULL, IF NOT PROCEED WITH BELOW
-            // if (GameEnded(gameStatus)) { 
-            // display winner.
-            //Ask to replay.
-            //handle choice}
-
-            Console.WriteLine("Game board Positions:");
-            Program.PrintGameBoard(validPositions);
-            Console.WriteLine("Game board status:");
-            Program.PrintGameBoard(gameState);
-
-            Console.WriteLine($"Player {currentPlayer}, please enter a square number to place your token in...");
-
-            // if user input between 1-9 and tile is empty, then update the tile. else ask for input again
-            tilePosition = Console.ReadLine();
-            while (!Program.IsValidChoice(tilePosition) || !Program.IsValidTile(tilePosition))
+            // set playcount to 0 for each new game. if 9 turns are played without a winner then game is a draw
+            playCount = 0;
+            while (!IsGameEnded(Program.gameState))
+            // run a player turn as long as the game is not ended
             {
-                Console.WriteLine("Please enter a valid square number");
+
+                Console.Clear(); // only clears the visible portion of the console...https://docs.microsoft.com/en-us/dotnet/api/system.console.clear?view=netcore-3.1
+
+
+                Console.WriteLine("Game board Positions:");
+                Program.PrintGameBoard(validPositions);
+                Console.WriteLine("Game board status:");
+                Program.PrintGameBoard(gameState);
+
+                Console.WriteLine($"Player {currentPlayer}, please enter a square number to place your token in...");
+
+                // if user input between 1-9 and tile is empty, then update the tile. else ask for input again
                 tilePosition = Console.ReadLine();
+                while (!Program.IsValidChoice(tilePosition) || !Program.IsValidTile(tilePosition))
+                {
+                    Console.WriteLine("Please enter a valid square number");
+                    tilePosition = Console.ReadLine();
+                }
+                Program.UpdateTile(tilePosition);
             }
-            Program.UpdateTile(tilePosition);
 
         }
 
@@ -169,6 +185,7 @@ namespace CSharpAssignment
 
         static bool IsGameEnded(string[,] currentState)
         // checks if game is ended (optionally updates winner)
+        // returns true if game should end
         {
             // diagonal wins
             if ((currentState[0, 0] != " " && currentState[0, 0] == currentState[1, 1] && currentState[1, 1] == currentState[2, 2])
@@ -199,7 +216,7 @@ namespace CSharpAssignment
             }
 
             // if no wins detected and game board is full 
-            if (playCount > 9)
+            if (playCount > 8)
             {
                 gameWinner = "Draw";
                 return true;
@@ -212,8 +229,7 @@ namespace CSharpAssignment
         static void ResetGame()
         // Return game to it's initial state
         {
-            Console.WriteLine("Resetting game...");
-            playCount = 0;
+            Console.WriteLine("\n\nResetting game...");
 
             currentPlayer = " ";
 
