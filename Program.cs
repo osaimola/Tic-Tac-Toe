@@ -8,7 +8,6 @@ namespace CSharpAssignment
         static string tilePosition = "";
         static int playCount;
 
-        // TODO: update this to onlu declare gameWinner & initialize it in isGameended checks.
         static string gameWinner = "Draw";
         static string[,] gameState = { { " ", " ", " " }, { " ", " ", " " }, { " ", " ", " " } };
         static string[,] validPositions = { { "1", "2", "3" }, { "4", "5", "6" }, { "7", "8", "9" } };
@@ -140,6 +139,7 @@ namespace CSharpAssignment
 
         static bool IsValidTile(string tile)
         // Check if the selected tile is allowed for play (only empty tiles are valid)
+        // return true if selected tile is valid
         {
             switch (tile)
             {
@@ -168,6 +168,7 @@ namespace CSharpAssignment
 
         static bool IsValidChoice(string tile)
         // checks if user has entered a valid square option
+        // return false if input is not valid
         {
             int intTile;
             try
@@ -227,7 +228,7 @@ namespace CSharpAssignment
         }
 
         static void ResetGame()
-        // Return game to it's initial state
+        // Return game to its initial state
         {
             Console.WriteLine("\n\nResetting game...");
 
