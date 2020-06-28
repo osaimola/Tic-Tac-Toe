@@ -61,7 +61,7 @@ namespace CSharpAssignment
                 tilePosition = Console.ReadLine();
                 while (!Program.IsValidChoice(tilePosition) || !Program.IsValidTile(tilePosition))
                 {
-                    Console.WriteLine("Please enter a valid square number");
+                    Console.WriteLine("Unavailable or invalid square choice.\nPlease enter a valid square number [1 through 9]");
                     tilePosition = Console.ReadLine();
                 }
                 Program.UpdateTile(tilePosition);
